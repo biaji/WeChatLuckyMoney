@@ -7,4 +7,5 @@
     android:packageNames="com.tencent.mm, com.tencent.mobileqq"
     android:notificationTimeout="10"
     android:accessibilityFlags=""
+    android:settingsActivity="com.miui.hongbao.MainActivity"
     android:canRetrieveWindowContent="true"/>
