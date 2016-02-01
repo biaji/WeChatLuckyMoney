@@ -38,9 +38,7 @@ public class HongbaoService extends AccessibilityService {
     public final static String WECHAT_DETAILS_CH = "红包详情";
     public final static String WECHAT_BETTER_LUCK_EN = "Better luck next time!";
     public final static String WECHAT_BETTER_LUCK_CH = "手慢了";
-    public final static String WECHAT_OPEN_EN = "Open";
     public final static String WECHAT_OPENED_EN = "opened";
-    public final static String WECHAT_OPEN_CH = "拆红包";
     public final static String WECHAT_VIEW_SELF_CH = "查看红包";
     public final static String WECHAT_VIEW_OTHERS_CH = "领取红包";
     public final static String NOTIFICATION_TIP = "[微信红包]";
@@ -186,11 +184,12 @@ public class HongbaoService extends AccessibilityService {
         }
 
         /* 戳开红包，红包还没抢完，遍历节点匹配“拆红包” */
-        List<AccessibilityNodeInfo> unpackedNode = this.findAccessibilityNodeInfosByTexts(this.rootNodeInfo, new String[]{
-                this.WECHAT_OPEN_CH, this.WECHAT_OPEN_EN});
-        if (!unpackedNode.isEmpty()) {
-            return new HongbaoOpened(this, unpackedNode.get(0));
+        AccessibilityNodeInfo unpackedNode = this.rootNodeInfo.getChild(3);
+
+        if(unpackedNode != null && unpackedNode.getClassName().equals("android.widget.Button")){
+            return new HongbaoOpened(this, unpackedNode);
         }
+
 
         /* 戳开红包，红包已被抢完，遍历节点匹配“红包详情”和“手慢了” */
 
