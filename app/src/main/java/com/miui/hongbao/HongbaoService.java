@@ -184,9 +184,9 @@ public class HongbaoService extends AccessibilityService {
         }
 
         /* 戳开红包，红包还没抢完，遍历节点匹配“拆红包” */
-        AccessibilityNodeInfo unpackedNode = this.rootNodeInfo.getChild(3);
+        AccessibilityNodeInfo unpackedNode = (this.rootNodeInfo.getChildCount() > 3) ? this.rootNodeInfo.getChild(3) : null;
 
-        if(unpackedNode != null && unpackedNode.getClassName().equals("android.widget.Button")){
+        if (unpackedNode != null && unpackedNode.getClassName().equals("android.widget.Button")) {
             return new HongbaoOpened(this, unpackedNode);
         }
 
@@ -197,7 +197,7 @@ public class HongbaoService extends AccessibilityService {
                 this.WECHAT_BETTER_LUCK_CH, this.WECHAT_DETAILS_CH,
                 this.WECHAT_BETTER_LUCK_EN, this.WECHAT_DETAILS_EN});
 
-        if (!this.rootNodeInfo.getClassName().equals("android.widget.FrameLayout") || nodes3.size() > 1 ) { //聊天中出现的字符串不应该做为返回指示
+        if (!this.rootNodeInfo.getClassName().equals("android.widget.FrameLayout") || nodes3.size() > 1) { //聊天中出现的字符串不应该做为返回指示
             return null;
         }
 
