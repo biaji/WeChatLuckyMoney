@@ -21,19 +21,6 @@ import java.util.regex.Pattern;
 
 public class HongbaoService extends AccessibilityService {
 
-    private final static String TAG = "GOTCHA";
-
-    /**
-     * 已抢过的红包
-     */
-    private List<String> finishedNode = new ArrayList<>();
-
-    private AccessibilityNodeInfo rootNodeInfo;
-    /**
-     * 当前处理的红包节点标志字符串
-     */
-    private String currentNodeInfo;
-
     public final static String WECHAT_DETAILS_EN = "Details";
     public final static String WECHAT_DETAILS_CH = "红包详情";
     public final static String WECHAT_BETTER_LUCK_EN = "Better luck next time!";
@@ -43,14 +30,20 @@ public class HongbaoService extends AccessibilityService {
     public final static String WECHAT_VIEW_OTHERS_CH = "领取红包";
     public final static String NOTIFICATION_TIP = "[微信红包]";
     public final static String NOTIFICATION_QQ = "[QQ红包]";
-
-
+    private final static String TAG = "GOTCHA";
     /**
      * 用来鉴别对象是否为微信红包的字符串
      */
     private final static String VERIFY_TEXT = "微信红包";
-
-
+    /**
+     * 已抢过的红包
+     */
+    private List<String> finishedNode = new ArrayList<>();
+    private AccessibilityNodeInfo rootNodeInfo;
+    /**
+     * 当前处理的红包节点标志字符串
+     */
+    private String currentNodeInfo;
     private PowerManager pm;
 
     private PowerManager.WakeLock lock;
@@ -238,7 +231,22 @@ public class HongbaoService extends AccessibilityService {
 
             result += node.getParent().getChild(0).getText().toString(); //文本
 
-            result += node.getParent().getParent().getChild(0).getText().toString(); //或许有时间
+            AccessibilityNodeInfo packageInfo = node.getParent().getParent();
+
+            String timeStamp = "", sender = "";
+
+            for (int i = 0; i < packageInfo.getChildCount(); i++) {
+                AccessibilityNodeInfo childInfo = packageInfo.getChild(i);
+
+                if (childInfo.getClassName().equals("android.widget.ImageView")) {
+                    sender = childInfo.getContentDescription().toString();
+                } else if (childInfo.getClassName().equals("android.widget.TextView")) {
+                    timeStamp = childInfo.getText().toString();
+                }
+
+            }
+
+            result = result + sender + timeStamp;
         } catch (NullPointerException npe) {
             Log.w(TAG, "Target Without time");
         }
